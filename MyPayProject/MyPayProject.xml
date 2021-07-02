@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyPayProject</name>
+    </assembly>
+    <members>
+        <member name="T:MyPayProject.CsvImporter">
+            <summary>
+            CsvImporter class has tow methods one for opening and reading from CSV file and another one for instantiating a new pay record object.
+            </summary>
+        </member>
+        <member name="M:MyPayProject.CsvImporter.ImportPayRecords(System.String)">
+            <summary>
+            This is ImportPayRecords method which is a public static with ListPayRecord return. It has one string argument file_name.
+            This method uses a StreamReader class from the reusable System.IO component
+            </summary>
+            <param name="file">CSV file name and location, It's a string</param>
+            <returns>Return the PayRecord list</returns>
+        </member>
+        <member name="M:MyPayProject.CsvImporter.CreatePayRecord(System.Int32,System.Double[],System.Double[],System.String,System.String)">
+            <summary>
+            This CreatePayRecord method is used for instantiating a new pay record object from the data in csv file either a ResidentPayRecord or WorkingHolidayPayRecord, as appropriate. 
+            </summary>
+            <param name="id">The Employee ID it's an integer</param>
+            <param name="hours">The employee's working hours array it's a double array</param>
+            <param name="rates">The employee's working rate array it's a double array</param>
+            <param name="visa">Visa Number, it's a string</param>
+            <param name="yearToDate">It is an employee’s year to date pay (how much they have been paid during the financial year), It's a string</param>
+            <returns>Return a new PayRecord object either a ResidentPayRecord or WorkingHolidayPayRecord, as appropriate.</returns>
+        </member>
+        <member name="M:MyPayProject.CsvImporter.ReadCSVHelper(System.String)">
+            <summary>
+            This is ReadCSVHelper method which is a public static with ListPayRecord return. It has one string argument file_name.
+            This method uses a StreamReader class from the reusable System.IO component and a CsvReader class from reusable CsvHelper. 
+            </summary>
+            <param name="fileName">CSV file name and location, It's a string</param>
+            <returns>Return the PayRecord list</returns>
+        </member>
+        <member name="T:MyPayProject.PayRecord">
+            <summary>
+            PayRecord class Inherits from TaxCalculator class
+            </summary>
+        </member>
+        <member name="F:MyPayProject.PayRecord._hours">
+            <summary>
+            Both _hours and _rates fields are used as a parallel arrays to store the hours and rate for each shift, both fields are initialled by arguments passed in to the constructor.
+            They are protected to use it only in the sub classes.
+            </summary>
+        </member>
+        <member name="F:MyPayProject.PayRecord._rates">
+            <summary>
+            Both _hours and _rates fields are used as a parallel arrays to store the hours and rate for each shift, both fields are initialled by arguments passed in to the constructor.
+            They are protected to use it only in the sub classes.
+            </summary>
+        </member>
+        <member name="P:MyPayProject.PayRecord.Id">
+            <summary>
+            property for Id with public integer getter return employee id value, and private setter
+            </summary>
+        </member>
+        <member name="P:MyPayProject.PayRecord.Gross">
+            <summary>
+            property for Gross with no setter and with public douple getter return employee Gross value, derived value calculated from the sum of (hours multiplied by rate) for all shifts.
+            </summary>
+        </member>
+        <member name="P:MyPayProject.PayRecord.Tax">
+            <summary>
+             property for Tax public abstract double getter / no setter, derived value calculated from the appropriate TaxCalculator method based on the type of pay record(resident or working holiday)
+            </summary>
+        </member>
+        <member name="P:MyPayProject.PayRecord.Net">
+            <summary>
+            propery for Net public douple getter / no setter, derived value calculated from Gross minus Tax(Net = Gross - Tax)
+            </summary>
+        </member>
+        <member name="M:MyPayProject.PayRecord.#ctor(System.Int32,System.Double[],System.Double[])">
+            <summary>
+            This constructor in PayRecord class have three arguments int id,double[] hours,double[] rates
+            </summary>
+            <param name="id">The Employee ID, it's an integer</param>
+            <param name="hours">The employee's working hours array it's a double array</param>
+            <param name="rates">The employee's working rate array it's a double array</param>
+        </member>
+        <member name="M:MyPayProject.PayRecord.GetDetails">
+            <summary>
+            The GetDetails Method is public virtual string return.
+            Is located in PayRecord class and used to get all details about the employee such as employee ID, gross, net and tax amounts
+            </summary>
+            <returns>return the employee ID, gross, net and tax amounts</returns>
+        </member>
+        <member name="T:MyPayProject.PayRecordWriter">
+            <summary>
+            PayRecordWriter is a public class has one method to create and write csv file using CsvHelper and CsvWriter class
+            </summary>
+        </member>
+        <member name="M:MyPayProject.PayRecordWriter.Write(System.String,System.Collections.Generic.List{MyPayProject.PayRecord},System.Boolean)">
+            <summary>
+            The Write method must accept a list of PayRecord objects and write the ID, Gross, Net and Tax amounts to a comma delimited values (.csv) file.
+            It has an optional Boolean parameter named writeToConsole, with the default value false. If a true argument is passed in, the Write method must also write the values to the console.
+            </summary>
+            <param name="file">It's a string determines the file name and path for the new csv file</param>
+            <param name="records">list of PayRecord objects</param>
+            <param name="writeToConsole">It is a boolean with default value false,used to write the values to the console.</param>
+        </member>
+        <member name="T:MyPayProject.ResidentPayRecord">
+            <summary>
+            ResidentPayRecord class inherits from PayRecord class
+            </summary>
+        </member>
+        <member name="P:MyPayProject.ResidentPayRecord.Tax">
+            <summary>
+            Overrides abstract property Tax from base class (PayRecord class), public Getter / no Setter.
+            </summary>
+        </member>
+        <member name="M:MyPayProject.ResidentPayRecord.#ctor(System.Int32,System.Double[],System.Double[])">
+            <summary>
+            This conctructor calls base constructor in the base class (PayRecord class) have three arguments int id,double[] hours,double[] rates
+            </summary>
+            <param name="id">The Employee ID it's an integer</param>
+            <param name="hours">The employee's working hours array it's a double array</param>
+            <param name="rates">The employee's working rate array it's a double array</param>
+        </member>
+        <member name="T:MyPayProject.TaxCalculator">
+            <summary>
+            TaxCalculator class has to methods to calculate tax amount for both Resident and WorkingHoliday Employee
+            </summary>
+        </member>
+        <member name="M:MyPayProject.TaxCalculator.CalculateResidentialTax(System.Double)">
+            <summary>
+            This is CalculateResidentialTax method to calculate tax amount for resident (employees who live in Australia), which is calculated based on the value of gross pay.
+            Using the gross amount to specified the coefficient values (A and B),which is used to calculate the tax amount using the formula Tax = A * Gross - B.
+            Is located in TaxCalculator class.
+            </summary>
+            <param name="gross">The gross pay for the employee, It's double</param>
+            <returns>Return the Tax for a resident employee, It's double</returns>
+        </member>
+        <member name="M:MyPayProject.TaxCalculator.CalculateWorkingHolidayTax(System.Double,System.Double)">
+            <summary>
+            This is CalculateWorkingHolidayTax method to calculate tax amount for wtorking holiday (employees who are visiting Australia and on a working holiday).
+            Is calculated by multiplying the gross amount by the tax rate using the formula Tax = gross * rate.
+            Is located in TaxCalculator class.
+            </summary>
+            <param name="gross">The gross pay for the employee, It's double</param>
+            <param name="yearToDate">It is an employee’s year to date pay (how much they have been paid during the financial year), It's double</param>
+            <returns>Return the Tax for a working holiday employee, It's double</returns>
+        </member>
+        <member name="T:MyPayProject.WorkingHolidayPayRecord">
+            <summary>
+            WorkingHolidayPayRecord class inherits from PayRecord class
+            </summary>
+        </member>
+        <member name="P:MyPayProject.WorkingHolidayPayRecord.Tax">
+            <summary>
+             Overrides abstract property Tax from base class (PayRecord class), public Getter / no Setter.
+            </summary>
+        </member>
+        <member name="P:MyPayProject.WorkingHolidayPayRecord.Visa">
+            <summary>
+            property for Visa with public integer getter return employee visa value, and private setter
+            </summary>
+        </member>
+        <member name="P:MyPayProject.WorkingHolidayPayRecord.YearToDate">
+            <summary>
+            property for YearToDate with public integer getter return an employee’s year to date pay (how much they have been paid during the financial year) value, and private setter
+            </summary>
+        </member>
+        <member name="M:MyPayProject.WorkingHolidayPayRecord.#ctor(System.Int32,System.Double[],System.Double[],System.Int32,System.Int32)">
+            <summary>
+            This conctructor calls base constructor in the base class (PayRecord class) have sex arguments int id,double[] hours,double[] rates,int visa, int yearToDate
+            </summary>
+            <param name="id">The Employee ID, it's an integer</param>
+            <param name="hours">The employee's working hours array, it's a double array</param>
+            <param name="rates">The employee's working rate array, it's a double array</param>
+            <param name="visa">Visa Number, it's an integer </param>
+            <param name="yearToDate">It is an employee’s year to date pay (how much they have been paid during the financial year), It's an integer</param>
+        </member>
+        <member name="M:MyPayProject.WorkingHolidayPayRecord.GetDetails">
+            <summary>
+            The GetDetails Method is public override base method with string return.
+            Is located in WorkingHolidayPayRecord class and used to get all details about the employee such as employee ID, gross, net and tax amounts
+            </summary>
+            <returns>Return the values for the Visa and YearToDate properties In addittion to the employee ID, gross, net and tax amounts .</returns>
+        </member>
+    </members>
+</doc>
